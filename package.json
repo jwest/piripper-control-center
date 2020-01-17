@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watch"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "pino": "^5.16.0",
+    "pino-pretty": "^3.5.0"
+  },
   "devDependencies": {
     "jest": "^24.9.0"
   }

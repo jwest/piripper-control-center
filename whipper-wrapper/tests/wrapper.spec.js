@@ -12,6 +12,23 @@ describe('whipper ripping with success', () => {
         // expect 
         wrapper(MOCK).on('rippingSuccess', done);
     });
+
+    describe('parse meta data', () => {
+        [
+            { event: 'metaDataDiscIdRetrieved',   expect: { value: 'PTsh3.W7JzvObAM4e3myq3AGNEM' } },
+            { event: 'metaDataArtistRetrieved',   expect: { value: 'Sound Horizon' } },
+            { event: 'metaDataTitleRetrieved',    expect: { value: 'Elysion ～ 楽園幻想物語組曲 ～' } },
+            { event: 'metaDataDurationRetrieved', expect: { value: '01:00:25.943' } }
+        ].forEach(testCase => {
+            test(`should emit ${testCase.event}`, (done) => {
+                // expect 
+                wrapper(MOCK).on(testCase.event, (data) => {
+                    expect(data).toEqual(testCase.expect);
+                    done();
+                });
+            });
+        });
+    });
 });
 
 describe('whipper ripping with error', () => {
