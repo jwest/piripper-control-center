@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "./bin/piripper.js",
     "test": "jest --ci --collectCoverage",
     "test:watch": "jest --watch"
   },

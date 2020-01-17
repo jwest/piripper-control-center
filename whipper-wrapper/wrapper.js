@@ -40,13 +40,14 @@ const capitalize = (s) => {
 }
 
 module.exports = function wrapper(command, args) {
-    logger.debug('whipper-wrapper started');
     const emitter = new WhipperWrapperEmitter();
 
     const handleError = (err) => {
         if (err) emitter.emit('rippingError', err);
     };
 
+    logger.debug(`Whipper starting with command: ${command}, args: ${args}`);
+    
     const process = childProcess.execFile(
         command,
         args,

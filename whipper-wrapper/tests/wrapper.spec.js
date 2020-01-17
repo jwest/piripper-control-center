@@ -1,16 +1,18 @@
 const wrapper = require('../index');
 
+const workspaceMock = { getRawOutputPath: () => '/tmp/raw' };
+
 describe('whipper ripping with success', () => {
-    const MOCK_CONFIG = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-mock.sh' };
+    const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}:/output' };
 
     test('should emmit rippingEnd', (done) => {
         // expect 
-        wrapper(MOCK_CONFIG).on('rippingEnd', done);
+        wrapper(configMock, workspaceMock).on('rippingEnd', done);
     });
     
     test('should emmit rippingSuccess', (done) => {
         // expect 
-        wrapper(MOCK_CONFIG).on('rippingSuccess', done);
+        wrapper(configMock, workspaceMock).on('rippingSuccess', done);
     });
 
     describe('parse meta data', () => {
@@ -22,7 +24,7 @@ describe('whipper ripping with success', () => {
         ].forEach(testCase => {
             test(`should emit ${testCase.event}`, (done) => {
                 // expect 
-                wrapper(MOCK_CONFIG).on(testCase.event, (data) => {
+                wrapper(configMock, workspaceMock).on(testCase.event, (data) => {
                     expect(data).toEqual(testCase.expect);
                     done();
                 });
@@ -32,16 +34,16 @@ describe('whipper ripping with success', () => {
 });
 
 describe('whipper ripping with error', () => {
-    const MOCK_CONFIG = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh' };
+    const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh {{WORKSPACE_PATH}}:/output' };
 
     test('should emmit rippingEnd', (done) => {
         // expect 
-        wrapper(MOCK_CONFIG).on('rippingEnd', done);
+        wrapper(configMock, workspaceMock).on('rippingEnd', done);
     });
     
     test('should emmit rippingError', (done) => {
         // expect
-        wrapper(MOCK_CONFIG).on('rippingError', (errData) => {
+        wrapper(configMock, workspaceMock).on('rippingError', (errData) => {
             expect(errData.toString()).toContain('Error: Command failed:');
             done();
         });
