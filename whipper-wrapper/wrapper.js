@@ -39,16 +39,17 @@ const capitalize = (s) => {
     return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-module.exports = function wrapper(command) {
+module.exports = function wrapper(command, args) {
+    logger.debug('whipper-wrapper started');
     const emitter = new WhipperWrapperEmitter();
 
     const handleError = (err) => {
-        if (err) emitter.emit('rippingError');
+        if (err) emitter.emit('rippingError', err);
     };
 
     const process = childProcess.execFile(
         command,
-        [],
+        args,
         handleError);
     
     process.stdout.on('data', (data) => {

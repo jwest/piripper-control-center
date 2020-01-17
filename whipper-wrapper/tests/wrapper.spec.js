@@ -1,16 +1,16 @@
-const wrapper = require('../wrapper');
+const wrapper = require('../index');
 
 describe('whipper ripping with success', () => {
-    const MOCK = './whipper-wrapper/tests/mocks/whipper-mock.sh';
+    const MOCK_CONFIG = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-mock.sh' };
 
     test('should emmit rippingEnd', (done) => {
         // expect 
-        wrapper(MOCK).on('rippingEnd', done);
+        wrapper(MOCK_CONFIG).on('rippingEnd', done);
     });
     
     test('should emmit rippingSuccess', (done) => {
         // expect 
-        wrapper(MOCK).on('rippingSuccess', done);
+        wrapper(MOCK_CONFIG).on('rippingSuccess', done);
     });
 
     describe('parse meta data', () => {
@@ -22,7 +22,7 @@ describe('whipper ripping with success', () => {
         ].forEach(testCase => {
             test(`should emit ${testCase.event}`, (done) => {
                 // expect 
-                wrapper(MOCK).on(testCase.event, (data) => {
+                wrapper(MOCK_CONFIG).on(testCase.event, (data) => {
                     expect(data).toEqual(testCase.expect);
                     done();
                 });
@@ -32,15 +32,18 @@ describe('whipper ripping with success', () => {
 });
 
 describe('whipper ripping with error', () => {
-    const MOCK = './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh';
+    const MOCK_CONFIG = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh' };
 
     test('should emmit rippingEnd', (done) => {
         // expect 
-        wrapper(MOCK).on('rippingEnd', done);
+        wrapper(MOCK_CONFIG).on('rippingEnd', done);
     });
     
     test('should emmit rippingError', (done) => {
         // expect
-        wrapper(MOCK).on('rippingError', done);
+        wrapper(MOCK_CONFIG).on('rippingError', (errData) => {
+            expect(errData.toString()).toContain('Error: Command failed:');
+            done();
+        });
     });
 });

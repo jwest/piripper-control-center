@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "pino": "^5.16.0",
-    "pino-pretty": "^3.5.0"
+    "pino-pretty": "^3.5.0",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "jest": "^24.9.0"
