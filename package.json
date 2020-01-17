@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "normalize-strings": "^1.1.0",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",
     "yargs": "^15.1.0"

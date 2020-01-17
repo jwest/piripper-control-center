@@ -1,5 +1,8 @@
 {
     "whipperWrapper": {
         "whipperCommand": "/usr/bin/docker run --rm --device=/dev/cdrom -v /home/pi/.config/whipper:/home/worker/.config/whipper -v {{WORKSPACE_PATH}}/output:/output whipperteam/whipper"
+    },
+    "albumStore": {
+        "albumDir": "~/Music"
     }
 }
