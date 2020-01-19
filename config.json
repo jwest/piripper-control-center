@@ -4,7 +4,7 @@
         "ejectCommand": "eject"
     },
     "whipperWrapper": {
-        "whipperCommand": "/usr/bin/docker run --rm --device=/dev/cdrom -v /home/pi/.config/whipper:/home/worker/.config/whipper -v {{WORKSPACE_PATH}}/output:/output whipperteam/whipper"
+        "whipperCommand": "/usr/bin/docker run --rm --device=/dev/cdrom -v /home/pi/.config/whipper:/home/worker/.config/whipper -v {{WORKSPACE_PATH}}:/output whipperteam/whipper"
     },
     "fileNameNormalizator": {
         "enabled": true
