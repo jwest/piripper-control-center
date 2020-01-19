@@ -18,6 +18,9 @@ module.exports = function app(argv) {
 
                 whipper.on('rippingError', (err) => {
                     logger.info('Ripping ended with errors', err);
+
+                    cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+
                     resolve();
                 });
 
@@ -26,14 +29,21 @@ module.exports = function app(argv) {
                         .normalize(tmpWorkspace)
                         .then(() => {
                             logger.info('Normalization file name ended');
+                            
+                            return albumStore(config(argv.config)('albumStore')).store(tmpWorkspace);
+                        })
+                        .then(() => {
+                            logger.info('END of ripping');
+                            
+                            cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+                        })
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch((err) => {
+                            logger.error(`Error on ripping: ${err}`);
 
-                            albumStore(config(argv.config)('albumStore')).store(tmpWorkspace)
-                                .then(() => {
-                                    logger.info('END of ripping - eject cd');
-                                    cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
-
-                                    resolve();
-                                });
+                            cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
                         });
                 });
             });
