@@ -46,6 +46,10 @@ module.exports = function app(argv) {
                             cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
                         });
                 });
+
+                whipper.on('metaDataMusicBrainzLookupUrlRetrieved', (metaData) => {
+                    logger.info(`Please add release to musicbrainz: ${metaData.value}`);
+                });
             });
     });
 }
