@@ -42,19 +42,13 @@ const capitalize = (s) => {
 module.exports = function wrapper(command, args) {
     const emitter = new WhipperWrapperEmitter();
 
-    const handleError = (err) => {
-        if (err) emitter.emit('rippingError', err);
-    };
-
     logger.debug(`Whipper starting with command: ${command}, args: ${args}`);
-    
-    const process = childProcess.execFile(
-        command,
-        args,
-        handleError);
+
+    const process = childProcess.execFile(command, args);
     
     process.stdout.on('data', (data) => {
         data.split("\n").forEach((line) => {
+            logger.trace('WHIPPER STDOUT:', line);
             const field = metaDataParse(line);
 
             if (field != null) {
@@ -63,9 +57,19 @@ module.exports = function wrapper(command, args) {
         });
     });
 
-    process.stdout.on('end', () => {
-        emitter.emit('rippingSuccess');
+    process.stderr.on('data', (data) => {
+        data.split("\n").forEach((line) => {
+            logger.warn('WHIPPER STDERR:', line);
+        });
+    });
+
+    process.on('exit', (statusCode) => {
         emitter.emit('rippingEnd');
+        if (statusCode == 0) {
+            emitter.emit('rippingSuccess');
+        } else {
+            emitter.emit('rippingError', { statusCode });
+        }
     });
 
     return emitter;

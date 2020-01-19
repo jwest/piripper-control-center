@@ -3,6 +3,7 @@ const config = require('./lib/config');
 
 const workspace = require('./workspace');
 const whipperWrapper = require('./whipper-wrapper');
+const fileNameNormalizator = require('./file-name-normalizator');
 
 module.exports = function app(argv) {
     console.log(argv);
@@ -17,5 +18,15 @@ module.exports = function app(argv) {
 
     whipper.on('rippingError', (err) => {
         logger.info('Ripping ended with errors', err);
+    });
+
+    whipper.on('rippingSuccess', () => {
+
+        fileNameNormalizator(config(argv.config)('fileNameNormalizator'))
+            .normalize(tmpWorkspace)
+            .then(() => {
+                logger.info('Normalization file name ended');
+            });
+
     });
 }

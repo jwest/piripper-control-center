@@ -2,6 +2,9 @@
     "whipperWrapper": {
         "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}"
     },
+    "fileNameNormalizator": {
+        "enabled": false
+    },
     "albumStore": {
         "albumDir": "~/Music"
     }

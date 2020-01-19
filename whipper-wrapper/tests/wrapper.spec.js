@@ -43,8 +43,8 @@ describe('whipper ripping with error', () => {
     
     test('should emmit rippingError', (done) => {
         // expect
-        wrapper(configMock, workspaceMock).on('rippingError', (errData) => {
-            expect(errData.toString()).toContain('Error: Command failed:');
+        wrapper(configMock, workspaceMock).on('rippingError', ({ statusCode }) => {
+            expect(statusCode).toBe(1);
             done();
         });
     });

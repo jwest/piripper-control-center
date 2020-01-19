@@ -211,4 +211,14 @@ echo "CRCs match for track 45                            "
 echo "Peak level: 5"
 echo "Rip quality: 100.00%"
 
+if [ -n "$1" ]
+  then
+    echo "Path provided"
+    echo $1
+    mkdir "$1/Sound Horizon"
+    echo 'test' >> "$1/Sound Horizon/01. Sound Horizon - エルの楽園 ［→ side：Ｅ →］.flac"
+    echo 'test' >> "$1/Sound Horizon/09. Sound Horizon - エルの絵本 【笛吹き男とパレード】.flac"
+    echo 'test' >> "$1/Sound Horizon/45. Sound Horizon - [silence].flac"
+fi
+
 exit 0

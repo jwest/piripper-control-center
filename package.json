@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./bin/piripper.js",
-    "test": "jest --ci --collectCoverage",
-    "test:watch": "jest --watch"
+    "start": "LOG_LEVEL=trace ./bin/piripper.js",
+    "test": "LOG_LEVEL=trace jest --ci --collectCoverage",
+    "test:watch": "LOG_LEVEL=warn jest --watch"
   },
-  "author": "",
+  "author": "Jakub Westfalewski <j.westfalewski@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "normalize-strings": "^1.1.0",

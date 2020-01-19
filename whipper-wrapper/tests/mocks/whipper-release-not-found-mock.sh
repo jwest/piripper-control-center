@@ -12,4 +12,6 @@ echo ""
 echo "INFO:whipper.command.cd:FreeDB identifies disc as ['Airbourne / Boneshaker']"
 echo "CRITICAL:whipper.command.cd:unable to retrieve disc metadata, --unknown argument not passed"
 
+>&2 echo "stderr testing!"
+
 exit 1

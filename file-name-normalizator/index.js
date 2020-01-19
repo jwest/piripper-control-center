@@ -4,6 +4,13 @@ const normalize = require('normalize-strings');
 
 const logger = require('../lib/logger');
 
+function normalizeName(name, config) {
+    if (!config.enabled) {
+        return name;
+    }
+    return normalize(name).replace(/[^\x00-\x7F]/g, '_');
+}
+
 module.exports = function fileNameNormalizator(config) {
     return {
         normalize: (tmpWorkspace) => {
@@ -15,10 +22,10 @@ module.exports = function fileNameNormalizator(config) {
                     }
 
                     const albumName = albumFiles[0];
-                    logger.debug(`Normalize album directory name: '${albumName}' -> '${normalize(albumName)}'`);
+                    logger.debug(`Normalize album directory name: '${albumName}' -> '${normalizeName(albumName, config)}'`);
 
-                    const normalizedAlbumPath = join(tmpWorkspace.getNormalizedOutputPath(), normalize(albumName));
-                    
+                    const normalizedAlbumPath = join(tmpWorkspace.getNormalizedOutputPath(), normalizeName(albumName, config));
+
                     mkdirSync(normalizedAlbumPath);
                     logger.debug(`Album directory created on '${normalizedAlbumPath}'`);
 
@@ -29,9 +36,9 @@ module.exports = function fileNameNormalizator(config) {
                         }
                         
                         songFiles.map(songFile => {
-                            logger.debug(`Normalize song file name: '${songFile}' -> '${normalize(songFile)}'`);
+                            logger.debug(`Normalize song file name: '${songFile}' -> '${normalizeName(songFile, config)}'`);
 
-                            const normalizedSongPath = join(normalizedAlbumPath, normalize(songFile));
+                            const normalizedSongPath = join(normalizedAlbumPath, normalizeName(songFile, config));
 
                             renameSync(
                                 join(tmpWorkspace.getRawOutputPath(), albumName, songFile),

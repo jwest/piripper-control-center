@@ -17,12 +17,17 @@ module.exports = function workspace() {
 
     const rawPath = join(tmpPath, 'raw');
     mkdirSync(rawPath);
-    logger.debug(`Workspace tmp dir raw: ${rawPath}`);
+    logger.debug(`Workspace tmp dir for raw output: ${rawPath}`);
+
+    const normalizedOutputPath = join(tmpPath, 'output');
+    mkdirSync(normalizedOutputPath);
+    logger.debug(`Workspace tmp dir for normalized output: ${normalizedOutputPath}`);
 
     logger.info(`Workspace path in tmp dir created, path: ${tmpPath}`);
 
     return {
         getPath: () => tmpPath,
         getRawOutputPath: () => rawPath,
+        getNormalizedOutputPath: () => normalizedOutputPath,
     }
 }
