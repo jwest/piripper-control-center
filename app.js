@@ -5,6 +5,7 @@ const workspace = require('./workspace');
 const cdromStarter = require('./cdrom-starter');
 const whipperWrapper = require('./whipper-wrapper');
 const fileNameNormalizator = require('./file-name-normalizator');
+const albumStore = require('./album-store');
 
 module.exports = function app(argv) {
     return new Promise((resolve) => {
@@ -26,10 +27,13 @@ module.exports = function app(argv) {
                         .then(() => {
                             logger.info('Normalization file name ended');
 
-                            logger.info('END of ripping - eject cd');
-                            cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+                            albumStore(config(argv.config)('albumStore')).store(tmpWorkspace)
+                                .then(() => {
+                                    logger.info('END of ripping - eject cd');
+                                    cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
 
-                            resolve();
+                                    resolve();
+                                });
                         });
                 });
             });

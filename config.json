@@ -10,6 +10,8 @@
         "enabled": true
     },
     "albumStore": {
-        "albumDir": "~/Music"
+        "destinations": [
+            { "path": "~/Music" }
+        ]
     }
 }

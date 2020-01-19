@@ -6,11 +6,12 @@
   "scripts": {
     "start": "LOG_LEVEL=trace ./bin/piripper.js",
     "test": "LOG_LEVEL=trace jest --ci --collectCoverage",
-    "test:watch": "LOG_LEVEL=warn jest --watch"
+    "test:watch": "LOG_LEVEL=error jest --watch"
   },
   "author": "Jakub Westfalewski <j.westfalewski@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "fs-extra": "^8.1.0",
     "normalize-strings": "^1.1.0",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",

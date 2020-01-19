@@ -1,9 +1,12 @@
 const wrapper = require('../index');
 
-const workspaceMock = { getRawOutputPath: () => '/tmp/raw' };
+const { tmpdir } = require('os');
+const { sep } = require('path');
+
+const workspaceMock = { getRawOutputPath: () => `${tmpdir()}` };
 
 describe('whipper ripping with success', () => {
-    const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}:/output' };
+    const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}' };
 
     test('should emmit rippingEnd', (done) => {
         // expect 

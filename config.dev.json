@@ -7,9 +7,12 @@
         "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}"
     },
     "fileNameNormalizator": {
-        "enabled": false
+        "enabled": true
     },
     "albumStore": {
-        "albumDir": "~/Music"
+        "destinations": [
+            { "path": "/Users/jakub.westfalewski/Music" },
+            { "path": "/Users/jakub.westfalewski/Desktop" }
+        ]
     }
 }
