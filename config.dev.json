@@ -1,4 +1,8 @@
 {
+    "cdromStatus": {
+        "ejectCommand": "./cdrom-starter/tests/mocks/eject-mock.sh",
+        "setcdCommand": "./cdrom-starter/tests/mocks/setcd-mock.sh"
+    },
     "whipperWrapper": {
         "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}"
     },

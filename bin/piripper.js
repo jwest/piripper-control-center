@@ -2,4 +2,10 @@
 const argv = require('yargs').argv
 const app = require('../app');
 
-app(argv);
+async function run() {
+    while(true) {
+        await app(argv);
+    }
+}
+
+run();
