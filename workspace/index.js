@@ -7,27 +7,27 @@ const logger = require('../lib/logger');
 const TMP_PREFIX = 'piripper';
 
 function createDirNamePrefix() {
-    const date = new Date();
-    return `${TMP_PREFIX}_${date.getTime()}_`;
+  const date = new Date();
+  return `${TMP_PREFIX}_${date.getTime()}_`;
 }
 
 module.exports = function workspace() {
-    const tmpPath = mkdtempSync(join(tmpdir(), createDirNamePrefix()));
-    logger.debug(`Workspace tmp dir root: ${tmpPath}`);
+  const tmpPath = mkdtempSync(join(tmpdir(), createDirNamePrefix()));
+  logger.debug(`Workspace tmp dir root: ${tmpPath}`);
 
-    const rawPath = join(tmpPath, 'raw');
-    mkdirSync(rawPath);
-    logger.debug(`Workspace tmp dir for raw output: ${rawPath}`);
+  const rawPath = join(tmpPath, 'raw');
+  mkdirSync(rawPath);
+  logger.debug(`Workspace tmp dir for raw output: ${rawPath}`);
 
-    const normalizedOutputPath = join(tmpPath, 'output');
-    mkdirSync(normalizedOutputPath);
-    logger.debug(`Workspace tmp dir for normalized output: ${normalizedOutputPath}`);
+  const normalizedOutputPath = join(tmpPath, 'output');
+  mkdirSync(normalizedOutputPath);
+  logger.debug(`Workspace tmp dir for normalized output: ${normalizedOutputPath}`);
 
-    logger.info(`Workspace path in tmp dir created, path: ${tmpPath}`);
+  logger.info(`Workspace path in tmp dir created, path: ${tmpPath}`);
 
-    return {
-        getPath: () => tmpPath,
-        getRawOutputPath: () => rawPath,
-        getNormalizedOutputPath: () => normalizedOutputPath,
-    }
-}
+  return {
+    getPath: () => tmpPath,
+    getRawOutputPath: () => rawPath,
+    getNormalizedOutputPath: () => normalizedOutputPath,
+  };
+};

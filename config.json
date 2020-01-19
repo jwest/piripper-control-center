@@ -11,7 +11,7 @@
     },
     "albumStore": {
         "destinations": [
-            { "path": "~/Music" }
+            { "path": "/home/pi/Music" }
         ]
     }
 }

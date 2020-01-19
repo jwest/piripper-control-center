@@ -1,93 +1,95 @@
-const { mkdtempSync, mkdirSync, writeFileSync, existsSync } = require('fs');
+const {
+  mkdtempSync, mkdirSync, writeFileSync, existsSync,
+} = require('fs');
 const { sep, join } = require('path');
 const { tmpdir } = require('os');
 
 const albumStore = require('../index');
 
 function tmp() {
-    return mkdtempSync(`${tmpdir()}${sep}`);
+  return mkdtempSync(`${tmpdir()}${sep}`);
 }
 
 function mockAlbum(outputPath, albumName, fileNames) {
-    const albumPath = join(outputPath, albumName);
-    mkdirSync(albumPath);
-    fileNames.forEach(fileName => {
-        writeFileSync(join(albumPath, fileName), 'placeholder', { mode: 0o755 });    
-    });
+  const albumPath = join(outputPath, albumName);
+  mkdirSync(albumPath);
+  fileNames.forEach((fileName) => {
+    writeFileSync(join(albumPath, fileName), 'placeholder', { mode: 0o755 });
+  });
 }
 
 describe('album store', () => {
-    test('should store album in one location', (done) => {
-        // given
-        const destinationPath = tmp();
-        const config = { destinations: [ { path: destinationPath } ] };
+  test('should store album in one location', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
 
-        const outputPath = tmp();
-        const tmpWorkspace = { 
-            getNormalizedOutputPath: () => outputPath,
-        };
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
 
-        mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
-        // when
-        const result = albumStore(config).store(tmpWorkspace);
+    // when
+    const result = albumStore(config).store(tmpWorkspace);
 
-        // then
-        return result.then(() => {
-            expect(existsSync(join(destinationPath, 'album name'))).toBe(true);
-            expect(existsSync(join(destinationPath, 'album name', '1. file name.flac'))).toBe(true);
-            expect(existsSync(join(destinationPath, 'album name', '2. file name.flac'))).toBe(true);
-            done();
-        });
+    // then
+    return result.then(() => {
+      expect(existsSync(join(destinationPath, 'album name'))).toBe(true);
+      expect(existsSync(join(destinationPath, 'album name', '1. file name.flac'))).toBe(true);
+      expect(existsSync(join(destinationPath, 'album name', '2. file name.flac'))).toBe(true);
+      done();
     });
+  });
 
-    test('should store album in many location', (done) => {
-        // given
-        const destinationPath = tmp();
-        const otherDestinationPath = tmp();
-        const config = { destinations: [ { path: destinationPath }, { path: otherDestinationPath } ] };
+  test('should store album in many location', (done) => {
+    // given
+    const destinationPath = tmp();
+    const otherDestinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }, { path: otherDestinationPath }] };
 
-        const outputPath = tmp();
-        const tmpWorkspace = { 
-            getNormalizedOutputPath: () => outputPath,
-        };
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
 
-        mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
-        // when
-        const result = albumStore(config).store(tmpWorkspace);
+    // when
+    const result = albumStore(config).store(tmpWorkspace);
 
-        // then
-        return result.then(() => {
-            expect(existsSync(join(destinationPath, 'album name'))).toBe(true);
-            expect(existsSync(join(destinationPath, 'album name', '1. file name.flac'))).toBe(true);
-            expect(existsSync(join(destinationPath, 'album name', '2. file name.flac'))).toBe(true);
-            expect(existsSync(join(otherDestinationPath, 'album name'))).toBe(true);
-            expect(existsSync(join(otherDestinationPath, 'album name', '1. file name.flac'))).toBe(true);
-            expect(existsSync(join(otherDestinationPath, 'album name', '2. file name.flac'))).toBe(true);
-            done();
-        });
+    // then
+    return result.then(() => {
+      expect(existsSync(join(destinationPath, 'album name'))).toBe(true);
+      expect(existsSync(join(destinationPath, 'album name', '1. file name.flac'))).toBe(true);
+      expect(existsSync(join(destinationPath, 'album name', '2. file name.flac'))).toBe(true);
+      expect(existsSync(join(otherDestinationPath, 'album name'))).toBe(true);
+      expect(existsSync(join(otherDestinationPath, 'album name', '1. file name.flac'))).toBe(true);
+      expect(existsSync(join(otherDestinationPath, 'album name', '2. file name.flac'))).toBe(true);
+      done();
     });
+  });
 
-    test('should clear after store', (done) => {
-        // given
-        const destinationPath = tmp();
-        const config = { destinations: [ { path: destinationPath } ] };
+  test('should clear after store', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
 
-        const outputPath = tmp();
-        const tmpWorkspace = { 
-            getNormalizedOutputPath: () => outputPath,
-        };
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
 
-        mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
-        // when
-        const result = albumStore(config).store(tmpWorkspace);
+    // when
+    const result = albumStore(config).store(tmpWorkspace);
 
-        // then
-        return result.then(() => {
-            expect(existsSync(join(outputPath, 'album name'))).toBe(false);
-            done();
-        });
+    // then
+    return result.then(() => {
+      expect(existsSync(join(outputPath, 'album name'))).toBe(false);
+      done();
     });
+  });
 });

@@ -8,48 +8,48 @@ const fileNameNormalizator = require('./file-name-normalizator');
 const albumStore = require('./album-store');
 
 module.exports = function app(argv) {
-    return new Promise((resolve) => {
-        cdromStarter(config(argv.config)('cdromStatus'))
-            .waitForCd()
+  return new Promise((resolve) => {
+    cdromStarter(config(argv.config)('cdromStatus'))
+      .waitForCd()
+      .then(() => {
+        const tmpWorkspace = workspace();
+
+        const whipper = whipperWrapper(config(argv.config)('whipperWrapper'), tmpWorkspace);
+
+        whipper.on('rippingError', (err) => {
+          logger.info('Ripping ended with errors', err);
+
+          cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+
+          resolve();
+        });
+
+        whipper.on('rippingSuccess', () => {
+          fileNameNormalizator(config(argv.config)('fileNameNormalizator'))
+            .normalize(tmpWorkspace)
             .then(() => {
-                const tmpWorkspace = workspace();
+              logger.info('Normalization file name ended');
 
-                const whipper = whipperWrapper(config(argv.config)('whipperWrapper'), tmpWorkspace);
+              return albumStore(config(argv.config)('albumStore')).store(tmpWorkspace);
+            })
+            .then(() => {
+              logger.info('END of ripping');
 
-                whipper.on('rippingError', (err) => {
-                    logger.info('Ripping ended with errors', err);
+              cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+            })
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              logger.error(`Error on ripping: ${err}`);
 
-                    cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
-
-                    resolve();
-                });
-
-                whipper.on('rippingSuccess', () => {
-                    fileNameNormalizator(config(argv.config)('fileNameNormalizator'))
-                        .normalize(tmpWorkspace)
-                        .then(() => {
-                            logger.info('Normalization file name ended');
-                            
-                            return albumStore(config(argv.config)('albumStore')).store(tmpWorkspace);
-                        })
-                        .then(() => {
-                            logger.info('END of ripping');
-                            
-                            cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
-                        })
-                        .then(() => {
-                            resolve();
-                        })
-                        .catch((err) => {
-                            logger.error(`Error on ripping: ${err}`);
-
-                            cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
-                        });
-                });
-
-                whipper.on('metaDataMusicBrainzLookupUrlRetrieved', (metaData) => {
-                    logger.info(`Please add release to musicbrainz: ${metaData.value}`);
-                });
+              cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
             });
-    });
-}
+        });
+
+        whipper.on('metaDataMusicBrainzLookupUrlRetrieved', (metaData) => {
+          logger.info(`Please add release to musicbrainz: ${metaData.value}`);
+        });
+      });
+  });
+};
