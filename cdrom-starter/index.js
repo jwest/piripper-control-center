@@ -21,10 +21,15 @@ module.exports = function cdromStarter(config) {
 
   function ejectCdrom() {
     logger.info('Eject cdrom tray');
-    childProcess.execFile(config.ejectCommand, [], (err, stdout, stderr) => {
-      if (err) {
-        logger.error(`CDROM eject command execution error (err: ${err}, stdout: ${stdout}, stderr: ${stderr})`);
-      }
+    return new Promise((resolve, reject) => {
+      childProcess.execFile(config.ejectCommand, [], (err, stdout, stderr) => {
+        if (err) {
+          logger.error(`CDROM eject command execution error (err: ${err}, stdout: ${stdout}, stderr: ${stderr})`);
+          reject();
+          return;
+        }
+        resolve();
+      });
     });
   }
 
@@ -36,7 +41,7 @@ module.exports = function cdromStarter(config) {
             clearInterval(interval);
             resolve();
           } else if (output.includes('No disc is inserted')) {
-            ejectCdrom();
+            ejectCdrom().then(() => resolve());
           }
         }).catch((err) => {
           logger.error(err.toString());

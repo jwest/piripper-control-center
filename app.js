@@ -19,9 +19,8 @@ module.exports = function app(argv) {
         whipper.on('rippingError', (err) => {
           logger.info('Ripping ended with errors', err);
 
-          cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
-
-          resolve();
+          cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
+            .then(() => { resolve() });
         });
 
         whipper.on('rippingSuccess', () => {
@@ -35,7 +34,7 @@ module.exports = function app(argv) {
             .then(() => {
               logger.info('END of ripping');
 
-              cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+              return cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
             })
             .then(() => {
               resolve();
@@ -43,7 +42,8 @@ module.exports = function app(argv) {
             .catch((err) => {
               logger.error(`Error on ripping: ${err}`);
 
-              cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
+              cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
+                .then(() => { resolve() });
             });
         });
 
