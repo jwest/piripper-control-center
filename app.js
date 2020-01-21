@@ -20,7 +20,7 @@ module.exports = function app(argv) {
           logger.info('Ripping ended with errors', err);
 
           cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
-            .then(() => { resolve() });
+            .then(() => { resolve(); });
         });
 
         whipper.on('rippingSuccess', () => {
@@ -43,7 +43,7 @@ module.exports = function app(argv) {
               logger.error(`Error on ripping: ${err}`);
 
               cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
-                .then(() => { resolve() });
+                .then(() => { resolve(); });
             });
         });
 
