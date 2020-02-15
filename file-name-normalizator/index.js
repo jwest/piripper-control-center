@@ -1,8 +1,8 @@
-const { readdir, mkdirSync, renameSync } = require('fs');
-const { join } = require('path');
-const normalize = require('normalize-strings');
+import { readdir, mkdirSync, renameSync } from 'fs';
+import { join } from 'path';
+import normalize from 'normalize-strings';
 
-const logger = require('../lib/logger');
+import logger from '../lib/logger';
 
 function normalizeName(name, config) {
   if (!config.enabled) {
@@ -11,7 +11,7 @@ function normalizeName(name, config) {
   return normalize(name).replace(/[^\x00-\x7F]/g, '_'); // eslint-disable-line no-control-regex
 }
 
-module.exports = function fileNameNormalizator(config) {
+export default function fileNameNormalizator(config) {
   return {
     normalize: (tmpWorkspace) => new Promise((resolve, reject) => {
       readdir(tmpWorkspace.getRawOutputPath(), (error, albumFiles) => {

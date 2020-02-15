@@ -1,8 +1,8 @@
-const { mkdtempSync, mkdirSync } = require('fs');
-const { join } = require('path');
-const { tmpdir } = require('os');
+import { mkdtempSync, mkdirSync } from 'fs';
+import { join } from 'path';
+import { tmpdir } from 'os';
 
-const logger = require('../lib/logger');
+import logger from '../lib/logger';
 
 const TMP_PREFIX = 'piripper';
 
@@ -11,7 +11,7 @@ function createDirNamePrefix() {
   return `${TMP_PREFIX}_${date.getTime()}_`;
 }
 
-module.exports = function workspace() {
+export default function workspace() {
   const tmpPath = mkdtempSync(join(tmpdir(), createDirNamePrefix()));
   logger.debug(`Workspace tmp dir root: ${tmpPath}`);
 

@@ -1,13 +1,13 @@
-const fs = require('fs-extra');
-const { join } = require('path');
+import fs from 'fs-extra';
+import { join } from 'path';
 
-const logger = require('../lib/logger');
+import logger from '../lib/logger';
 
 function getAlbumName(outputPath) {
   return fs.readdirSync(outputPath)[0];
 }
 
-module.exports = function albumStore(config) {
+export default function albumStore(config) {
   return {
     store: (tmpWorkspace) => new Promise((resolve) => {
       const albumName = getAlbumName(tmpWorkspace.getNormalizedOutputPath());

@@ -1,6 +1,5 @@
-
-const { tmpdir } = require('os');
-const wrapper = require('../index');
+import { tmpdir } from 'os';
+import wrapper from '../index';
 
 const workspaceMock = { getRawOutputPath: () => `${tmpdir()}` };
 

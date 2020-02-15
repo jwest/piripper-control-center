@@ -1,8 +1,8 @@
-const childProcess = require('child_process');
+import childProcess from 'child_process';
 
-const logger = require('../lib/logger');
+import logger from '../lib/logger';
 
-module.exports = function cdromStarter(config) {
+export default function cdromStarter(config) {
   function checkCdrom() {
     logger.debug('Tray read cdrom status');
     return new Promise((resolve, reject) => {
