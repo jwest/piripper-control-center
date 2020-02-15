@@ -1,13 +1,13 @@
-const logger = require('./lib/logger');
-const config = require('./lib/config');
+import logger from './lib/logger';
+import config from './lib/config';
 
-const workspace = require('./workspace');
-const cdromStarter = require('./cdrom-starter');
-const whipperWrapper = require('./whipper-wrapper');
-const fileNameNormalizator = require('./file-name-normalizator');
-const albumStore = require('./album-store');
+import workspace from './workspace';
+import cdromStarter from './cdrom-starter';
+import whipperWrapper from './whipper-wrapper';
+import fileNameNormalizator from './file-name-normalizator';
+import albumStore from './album-store';
 
-module.exports = function app(argv) {
+export default function app(argv) {
   return new Promise((resolve) => {
     cdromStarter(config(argv.config)('cdromStatus'))
       .waitForCd()
@@ -52,4 +52,4 @@ module.exports = function app(argv) {
         });
       });
   });
-};
+}

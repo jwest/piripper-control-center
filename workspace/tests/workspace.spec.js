@@ -1,4 +1,4 @@
-const workspace = require('../index');
+import workspace from '../index';
 
 describe('workspace', () => {
   test('should prepare workspace', () => {

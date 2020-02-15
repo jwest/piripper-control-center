@@ -1,10 +1,10 @@
-const {
+import {
   mkdtempSync, mkdirSync, writeFileSync, existsSync,
-} = require('fs');
-const { sep, join } = require('path');
-const { tmpdir } = require('os');
+} from 'fs';
+import { sep, join } from 'path';
+import { tmpdir } from 'os';
 
-const albumStore = require('../index');
+import albumStore from '../index';
 
 function tmp() {
   return mkdtempSync(`${tmpdir()}${sep}`);

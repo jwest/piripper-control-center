@@ -1,8 +1,8 @@
-const childProcess = require('child_process');
-const EventEmitter = require('events');
+import childProcess from 'child_process';
+import EventEmitter from 'events';
 
-const logger = require('../lib/logger');
-const fieldsFromLogs = require('./fields-from-logs');
+import logger from '../lib/logger';
+import fieldsFromLogs from './fields-from-logs';
 
 class WhipperWrapperEmitter extends EventEmitter {
   emit(event, ...args) {
@@ -39,7 +39,7 @@ const capitalize = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-module.exports = function wrapper(command, args) {
+export default function wrapper(command, args) {
   const emitter = new WhipperWrapperEmitter();
 
   logger.debug(`Whipper starting with command: ${command}, args: ${args}`);
@@ -73,4 +73,4 @@ module.exports = function wrapper(command, args) {
   });
 
   return emitter;
-};
+}

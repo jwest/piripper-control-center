@@ -1,4 +1,4 @@
-const cdromStarter = require('../index');
+import cdromStarter from '../index';
 
 describe('cdrom starter', () => {
   test('should run when cd is inserted', (done) => {
