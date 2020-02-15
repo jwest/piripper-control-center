@@ -73,4 +73,4 @@ export default function wrapper(command, args) {
   });
 
   return emitter;
-};
+}

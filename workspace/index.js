@@ -30,4 +30,4 @@ export default function workspace() {
     getRawOutputPath: () => rawPath,
     getNormalizedOutputPath: () => normalizedOutputPath,
   };
-};
+}

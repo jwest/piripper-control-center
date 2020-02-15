@@ -50,4 +50,4 @@ export default function cdromStarter(config) {
     }),
     ejectCdrom,
   };
-};
+}

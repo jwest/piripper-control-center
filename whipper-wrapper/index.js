@@ -15,4 +15,4 @@ export default function rip(config, workspace) {
   const command = prepareCommand(config.whipperCommand, workspace);
   const args = [...command.args, '--eject', 'failure', 'cd', 'rip', '--track-template', '%A - %d/%t. %a - %n', '--disc-template', '%A - %d/%A - %d'];
   return wrapper(command.program, args);
-};
+}

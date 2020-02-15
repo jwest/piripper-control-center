@@ -1,4 +1,6 @@
-import { mkdtempSync, mkdirSync, writeFileSync, existsSync } from 'fs';
+import {
+  mkdtempSync, mkdirSync, writeFileSync, existsSync,
+} from 'fs';
 import { sep, join } from 'path';
 import { tmpdir } from 'os';
 
