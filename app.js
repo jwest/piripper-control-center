@@ -1,5 +1,6 @@
 import logger from './lib/logger';
 import config from './lib/config';
+import EventBus from './lib/event-bus';
 
 import workspace from './workspace';
 import cdromStarter from './cdrom-starter';
@@ -10,6 +11,7 @@ import albumStore from './album-store';
 import frontend from './frontend';
 
 const frontendServer = frontend(3001);
+const eventBus = new EventBus();
 
 export default function app(argv) {
   return new Promise((resolve) => {
@@ -18,23 +20,22 @@ export default function app(argv) {
       .then(() => {
         const tmpWorkspace = workspace();
 
-        const whipper = whipperWrapper(config(argv.config)('whipperWrapper'), tmpWorkspace);
-        frontendServer.listen(whipper);
+        frontendServer.listen(eventBus);
 
-        whipper.on('rippingError', (err) => {
+        eventBus.on('rippingError', (err) => {
           logger.info('Ripping ended with errors', err);
 
           cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
             .then(() => { resolve(); });
         });
 
-        whipper.on('rippingSuccess', () => {
+        eventBus.on('rippingSuccess', () => {
           fileNameNormalizator(config(argv.config)('fileNameNormalizator'))
             .normalize(tmpWorkspace)
             .then(() => {
               logger.info('Normalization file name ended');
 
-              return albumStore(config(argv.config)('albumStore')).store(tmpWorkspace);
+              return albumStore(config(argv.config)('albumStore'), eventBus).store(tmpWorkspace);
             })
             .then(() => {
               logger.info('END of ripping');
@@ -52,9 +53,11 @@ export default function app(argv) {
             });
         });
 
-        whipper.on('metaDataMusicBrainzLookupUrlRetrieved', (metaData) => {
+        eventBus.on('metaDataMusicBrainzLookupUrlRetrieved', (metaData) => {
           logger.info(`Please add release to musicbrainz: ${metaData.value}`);
         });
+
+        whipperWrapper(config(argv.config)('whipperWrapper'), tmpWorkspace, eventBus);
       });
   });
 }
