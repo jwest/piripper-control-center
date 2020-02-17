@@ -7,7 +7,7 @@ function getAlbumName(outputPath) {
   return fs.readdirSync(outputPath)[0];
 }
 
-export default function albumStore(config) {
+export default function albumStore(config, eventBus) {
   return {
     store: (tmpWorkspace) => new Promise((resolve) => {
       const albumName = getAlbumName(tmpWorkspace.getNormalizedOutputPath());
@@ -15,12 +15,19 @@ export default function albumStore(config) {
       logger.debug(`Album path for prepare copy = ${albumPath}`);
 
       config.destinations.forEach((destination) => {
-        fs.copySync(albumPath, join(destination.path, albumName));
-        logger.info(`Album stored in: ${join(destination.path, albumName)}`);
+        const outputPath = join(destination.path, albumName);
+        eventBus.emit('storingStart', { inputPath: albumPath, outputPath });
+
+        fs.copySync(albumPath, outputPath);
+
+        logger.info(`Album stored in: ${outputPath}`);
+        eventBus.emit('storingEnd', { inputPath: albumPath, outputPath });
       });
 
       fs.removeSync(albumPath);
+
       logger.debug(`Temporary album path removed (${albumName})`);
+      eventBus.emit('storingClear', { inputPath: albumPath });
 
       resolve();
     }),

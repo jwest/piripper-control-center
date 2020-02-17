@@ -1,15 +1,7 @@
 import childProcess from 'child_process';
-import EventEmitter from 'events';
 
 import logger from '../lib/logger';
 import fieldsFromLogs from './fields-from-logs';
-
-class WhipperWrapperEmitter extends EventEmitter {
-  emit(event, ...args) {
-    logger.debug(`Event ${event} sended with data: ${JSON.stringify(args)}`);
-    super.emit(event, ...args);
-  }
-}
 
 function findInLog(line, pattern) {
   const regex = pattern;
@@ -39,10 +31,9 @@ const capitalize = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-export default function wrapper(command, args) {
-  const emitter = new WhipperWrapperEmitter();
-
+export default function wrapper(command, args, eventBus) {
   logger.debug(`Whipper starting with command: ${command}, args: ${args}`);
+  eventBus.emit('rippingStart');
 
   const process = childProcess.execFile(command, args);
 
@@ -52,7 +43,7 @@ export default function wrapper(command, args) {
       const field = metaDataParse(line);
 
       if (field != null) {
-        emitter.emit(`metaData${capitalize(field.name)}Retrieved`, { value: field.value });
+        eventBus.emit(`metaData${capitalize(field.name)}Retrieved`, { value: field.value });
       }
     });
   });
@@ -64,13 +55,13 @@ export default function wrapper(command, args) {
   });
 
   process.on('exit', (statusCode) => {
-    emitter.emit('rippingEnd');
+    eventBus.emit('rippingEnd');
     if (statusCode === 0) {
-      emitter.emit('rippingSuccess');
+      eventBus.emit('rippingSuccess');
     } else {
-      emitter.emit('rippingError', { statusCode });
+      eventBus.emit('rippingError', { statusCode });
     }
   });
 
-  return emitter;
+  return eventBus;
 }
