@@ -7,6 +7,10 @@ import whipperWrapper from './whipper-wrapper';
 import fileNameNormalizator from './file-name-normalizator';
 import albumStore from './album-store';
 
+import frontend from './frontend';
+
+const frontendServer = frontend(3001);
+
 export default function app(argv) {
   return new Promise((resolve) => {
     cdromStarter(config(argv.config)('cdromStatus'))
@@ -15,6 +19,7 @@ export default function app(argv) {
         const tmpWorkspace = workspace();
 
         const whipper = whipperWrapper(config(argv.config)('whipperWrapper'), tmpWorkspace);
+        frontendServer.listen(whipper);
 
         whipper.on('rippingError', (err) => {
           logger.info('Ripping ended with errors', err);
