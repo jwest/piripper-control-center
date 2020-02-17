@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import {
   mkdtempSync, mkdirSync, writeFileSync, existsSync,
 } from 'fs';
@@ -31,8 +32,10 @@ describe('album store', () => {
 
     mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
+    const eventEmitter = new EventEmitter();
+
     // when
-    const result = albumStore(config).store(tmpWorkspace);
+    const result = albumStore(config, eventEmitter).store(tmpWorkspace);
 
     // then
     return result.then(() => {
@@ -56,8 +59,10 @@ describe('album store', () => {
 
     mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
+    const eventEmitter = new EventEmitter();
+
     // when
-    const result = albumStore(config).store(tmpWorkspace);
+    const result = albumStore(config, eventEmitter).store(tmpWorkspace);
 
     // then
     return result.then(() => {
@@ -83,13 +88,89 @@ describe('album store', () => {
 
     mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
 
+    const eventEmitter = new EventEmitter();
+
     // when
-    const result = albumStore(config).store(tmpWorkspace);
+    const result = albumStore(config, eventEmitter).store(tmpWorkspace);
 
     // then
     return result.then(() => {
       expect(existsSync(join(outputPath, 'album name'))).toBe(false);
       done();
     });
+  });
+
+  test('should send event on start storing', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
+
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
+
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+
+    const eventEmitter = new EventEmitter();
+
+    eventEmitter.on('storingStart', (data) => {
+      // then
+      expect(data.inputPath).toBe(join(outputPath, 'album name'));
+      expect(data.outputPath).toBe(join(destinationPath, 'album name'));
+      done();
+    });
+
+    // when
+    albumStore(config, eventEmitter).store(tmpWorkspace);
+  });
+
+  test('should send event on end storing', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
+
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
+
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+
+    const eventEmitter = new EventEmitter();
+
+    eventEmitter.on('storingEnd', (data) => {
+      // then
+      expect(data.inputPath).toBe(join(outputPath, 'album name'));
+      expect(data.outputPath).toBe(join(destinationPath, 'album name'));
+      done();
+    });
+
+    // when
+    albumStore(config, eventEmitter).store(tmpWorkspace);
+  });
+
+  test('should send event on end storing', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
+
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
+
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+
+    const eventEmitter = new EventEmitter();
+
+    eventEmitter.on('storingClear', (data) => {
+      // then
+      expect(data.inputPath).toBe(join(outputPath, 'album name'));
+      done();
+    });
+
+    // when
+    albumStore(config, eventEmitter).store(tmpWorkspace);
   });
 });
