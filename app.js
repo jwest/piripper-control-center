@@ -10,8 +10,9 @@ import albumStore from './album-store';
 
 import frontend from './frontend';
 
-const frontendServer = frontend(3001);
 const eventBus = new EventBus();
+
+frontend(eventBus);
 
 export default function app(argv) {
   return new Promise((resolve) => {
@@ -19,8 +20,6 @@ export default function app(argv) {
       .waitForCd()
       .then(() => {
         const tmpWorkspace = workspace();
-
-        frontendServer.listen(eventBus);
 
         eventBus.on('rippingError', (err) => {
           logger.info('Ripping ended with errors', err);
