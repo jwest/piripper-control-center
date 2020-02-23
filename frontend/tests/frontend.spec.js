@@ -5,7 +5,14 @@ import frontend from '../index';
 const SRV_PORT = 3000;
 
 describe('frontend', () => {
-  test('should broadcast message from event bus', (done) => {
+
+  it.each`
+    eventName           | messageData
+    ${'rippingStart'}   | ${'{}'}
+    ${'rippingEnd'}     | ${'{}'}
+    ${'rippingSuccess'} | ${'{}'}
+    ${'rippingError'}   | ${'{}'}
+  `('should broadcast message "$eventName" from event bus', ({ eventName, messageData }, done) => {
     // given
     const eventBus = new EventEmitter();
     const srv = frontend(eventBus);
@@ -13,7 +20,7 @@ describe('frontend', () => {
 
     ws.on('open', () => {
       ws.on('message', (data) => {
-        expect(data).toBe('{"eventName":"rippingStart","data":{}}');
+        expect(data).toBe(`{"eventName":"${eventName}","data":${messageData}}`);
 
         // then
         ws.terminate();
@@ -21,7 +28,8 @@ describe('frontend', () => {
       });
 
       // when
-      eventBus.emit('rippingStart', {});
+      eventBus.emit(eventName, {});
     });
   });
+
 });
