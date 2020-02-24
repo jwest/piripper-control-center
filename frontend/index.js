@@ -26,10 +26,10 @@ function proxyEvent(eventName, ws, eventBus) {
   });
 }
 
-module.exports = (eventBus) => {
-  const srv = server({ port: 3000, distPath: 'dist/public' });
+module.exports = (eventBus, port = 3000) => {
+  const srv = server({ port, distPath: 'dist/public' });
 
-  const ws = new WebSocket('ws://localhost:3000');
+  const ws = new WebSocket(`ws://localhost:${port}`);
 
   ws.on('open', () => {
     logger.info('Backend client connected');
@@ -44,9 +44,9 @@ module.exports = (eventBus) => {
     });
   });
 
-
   return {
-    close: () => Promise.resolve(ws.terminate())
+    close: () => Promise
+      .resolve(ws.terminate())
       .then(() => srv.close()),
   };
 };
