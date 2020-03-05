@@ -3,6 +3,14 @@ import React, { useState, useEffect } from 'react';
 import Toolbar from './Toolbar';
 import RippingStatus from './RippingStatus';
 
+import {
+  ClientMessage,
+  StatusMessage,
+} from '../messages';
+
+//https://bulma.io/
+//https://getbootstrap.com/docs/4.4/getting-started/introduction/
+
 const App = () => {
   const [isConnected, setConnected] = useState(false);
   const [rippingStatus, setRippingStatus] = useState(null);
@@ -12,7 +20,7 @@ const App = () => {
 
     socket.addEventListener('open', () => {
       setConnected(true);
-      socket.send(JSON.stringify({ eventName: 'clientReady' }));
+      ClientMessage.clientReady().send(socket);
     });
 
     socket.addEventListener('close', () => {
@@ -20,7 +28,7 @@ const App = () => {
     });
 
     socket.addEventListener('message', (message) => {
-      setRippingStatus(JSON.parse(message.data));
+      setRippingStatus(StatusMessage.fromEvent(message.data));
     });
 
     return () => {

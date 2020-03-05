@@ -26,11 +26,6 @@ function metaDataParse(line) {
   return field;
 }
 
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
-
 export default function wrapper(command, args, eventBus) {
   logger.debug(`Whipper starting with command: ${command}, args: ${args}`);
   eventBus.emit('rippingStart');
@@ -43,7 +38,7 @@ export default function wrapper(command, args, eventBus) {
       const field = metaDataParse(line);
 
       if (field != null) {
-        eventBus.emit(`metaData${capitalize(field.name)}Retrieved`, { value: field.value });
+        eventBus.emit('metaDataRetrieved', { field: field.name, value: field.value });
       }
     });
   });

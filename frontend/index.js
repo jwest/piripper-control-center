@@ -1,32 +1,24 @@
 import WebSocket from 'ws';
 import server from './server';
 import logger from '../lib/logger';
+import {
+  STATUS_IDLE,
+  STATUS_RIPPING_START,
+  STATUS_RIPPING_SUCCESS,
+  STATUS_RIPPING_ERROR,
+  STATUS_METADATA_RETREIVED,
+  ClientMessage,
+  StatusMessage,
+} from './messages';
 
-class Status {
-  constructor(state, metadata = {}) {
-    this.state = state;
-    this.metadata = metadata;
-  }
+function proxyCleanEvent(eventName, ws, eventBus, status) {
+  logger.info(`Frontend - listen on '${eventName}'`);
 
-  setState(state) {
-    this.state = state;
-  }
-}
-
-class Message {
-  constructor(eventName, status, data) {
-    this.eventName = eventName;
-    this.status = status;
-    this.data = data;
-  }
-
-  toJson() {
-    return JSON.stringify({
-      eventName: this.eventName,
-      status: this.status,
-      data: this.data,
-    });
-  }
+  eventBus.on(eventName, (data) => {
+    logger.debug(`Frontend - send clean event '${eventName}' with data '${data}'`);
+    status.setToIdle();
+    status.send(ws);
+  });
 }
 
 function proxyEvent(eventName, ws, eventBus, status) {
@@ -34,15 +26,23 @@ function proxyEvent(eventName, ws, eventBus, status) {
 
   eventBus.on(eventName, (data) => {
     logger.debug(`Frontend - send event '${eventName}' with data '${data}'`);
-
     status.setState(eventName);
+    status.send(ws);
+  });
+}
 
-    ws.send(new Message(eventName, status, data).toJson());
+function proxyMetaData(eventName, ws, eventBus, status) {
+  logger.info(`Frontend - listen on metaData '${eventName}'`);
+
+  eventBus.on(eventName, (data) => {
+    logger.debug(`Frontend - send event '${eventName}' with data '${data}'`);
+    status.addMetaData(data.field, data.value);
+    status.send(ws);
   });
 }
 
 module.exports = (eventBus, port = 3000) => {
-  const status = new Status();
+  const status = new StatusMessage(STATUS_IDLE);
 
   const srv = server({ port, distPath: 'dist/public' });
 
@@ -52,18 +52,28 @@ module.exports = (eventBus, port = 3000) => {
     logger.info('Backend client connected');
 
     [
-      'rippingStart',
-      'rippingEnd',
-      'rippingSuccess',
-      'rippingError',
+      STATUS_IDLE,
+    ].forEach((eventName) => {
+      proxyCleanEvent(eventName, ws, eventBus, status);
+    });
+
+    [
+      STATUS_RIPPING_START,
+      STATUS_RIPPING_SUCCESS,
+      STATUS_RIPPING_ERROR,
     ].forEach((eventName) => {
       proxyEvent(eventName, ws, eventBus, status);
     });
 
+    [
+      STATUS_METADATA_RETREIVED,
+    ].forEach((eventName) => {
+      proxyMetaData(eventName, ws, eventBus, status);
+    });
+
     ws.on('message', (data) => {
-      const { eventName } = JSON.parse(data);
-      if (eventName === 'clientReady') {
-        ws.send(new Message('status', status, null).toJson());
+      if (ClientMessage.fromEvent(data).isClientReady()) {
+        status.send(ws);
       }
     });
   });

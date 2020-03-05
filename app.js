@@ -14,6 +14,8 @@ const eventBus = new EventBus();
 
 frontend(eventBus);
 
+eventBus.emit('idle');
+
 export default function app(argv) {
   return new Promise((resolve) => {
     cdromStarter(config(argv.config)('cdromStatus'))
@@ -42,10 +44,12 @@ export default function app(argv) {
               return cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
             })
             .then(() => {
+              eventBus.emit('idle');
               resolve();
             })
             .catch((err) => {
               logger.error(`Error on ripping: ${err}`);
+              eventBus.emit('idle');
 
               cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
                 .then(() => { resolve(); });

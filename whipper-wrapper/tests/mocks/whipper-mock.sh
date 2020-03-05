@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 2
+sleep $2
 
 echo "Using configured read offset 103"
 echo "Checking device /dev/sr0"
@@ -21,7 +21,7 @@ echo "Type    : Album"
 echo "Cat no  : BZCS 5006"
 echo ""
 
-sleep 2
+sleep $2
 
 echo "creating output directory ./album/Sound Horizon - Elysion ～ 楽園幻想物語組曲 ～"
 echo "Ripping track 1 of 45: 01. Sound Horizon - エルの楽園 ［→ side：Ｅ →］.flac"
@@ -29,7 +29,7 @@ echo "CRCs match for track 1                    "
 echo "Peak level: 32228"
 echo "Rip quality: 100.00%"
 
-sleep 2
+sleep $2
 
 echo "Ripping track 2 of 45: 02. Sound Horizon - Ark.flac"
 echo "CRCs match for track 2                    "
@@ -37,7 +37,7 @@ echo "Peak level: 32232"
 echo "Rip quality: 100.00%"
 echo "Ripping track 3 of 45: 03. Sound Horizon - エルの絵本 【魔女とラフレンツェ】.flac"
 
-sleep 2
+sleep $2
 
 echo "CRCs match for track 3                    "
 echo "Peak level: 32606"
@@ -45,7 +45,7 @@ echo "Rip quality: 100.00%"
 echo "Ripping track 4 of 45: 04. Sound Horizon - Baroque.flac"
 echo "CRCs match for track 4                    "
 
-sleep 2
+sleep $2
 
 echo "Peak level: 32535"
 echo "Rip quality: 100.00%"
@@ -54,7 +54,7 @@ echo "WARNING:whipper.program.cdparanoia:exit code 1"
 echo "Ripping track 5 of 45 (try 2): 05. Sound Horizon - エルの肖像.flac"
 echo "CRCs match for track 5                            "
 
-sleep 2
+sleep $2
 
 echo "Peak level: 32217"
 echo "Rip quality: 100.00%"
@@ -63,21 +63,21 @@ echo "CRCs match for track 6                            "
 echo "Peak level: 32573"
 echo "Rip quality: 100.00%"
 
-sleep 2
+sleep $2
 
 echo "Ripping track 7 of 45: 07. Sound Horizon - エルの天秤.flac"
 echo "CRCs match for track 7                            "
 echo "Peak level: 32531"
 echo "Rip quality: 100.00%"
 
-sleep 2
+sleep $2
 
 echo "Ripping track 8 of 45: 08. Sound Horizon - Sacrifice.flac"
 echo "CRCs match for track 8                            "
 echo "Peak level: 32227"
 echo "Rip quality: 100.00%"
 
-sleep 2
+sleep $2
 
 echo "Ripping track 9 of 45: 09. Sound Horizon - エルの絵本 【笛吹き男とパレード】.flac"
 echo "WARNING:whipper.program.cdparanoia:exit code 1    "
@@ -237,7 +237,7 @@ echo "CRCs match for track 45                            "
 echo "Peak level: 5"
 echo "Rip quality: 100.00%"
 
-sleep 2
+sleep $2
 
 
 if [ -n "$1" ]
