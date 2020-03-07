@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+#!/usr/bin/node
+
 const { argv } = require('yargs');
 const app = require('../dist/app');
 
