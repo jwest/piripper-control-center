@@ -5,6 +5,7 @@ const DiskMetadata = ({ rippingStatus }) => {
   const artist = rippingStatus.getMetaData('artist');
   const title = rippingStatus.getMetaData('title');
   const duration = rippingStatus.getMetaData('duration');
+  const musicBrainzLookupUrl = rippingStatus.getMetaData('musicBrainzLookupUrl');
 
   return (
     <div className="content">
@@ -12,6 +13,7 @@ const DiskMetadata = ({ rippingStatus }) => {
         <strong>{ !!title ? title : 'Loading metadata...' }</strong>
         { !!artist && <><br />{ artist }</> }
         { !!discId && <><br /><small>DiskId: { discId }</small></> }
+        { !!musicBrainzLookupUrl && <><br /><small><a href={musicBrainzLookupUrl}>Edit release on MusicBrainz</a></small></> }
         { !!duration && <><br /><small>(duration: { duration })</small></> }
       </p>
     </div>
