@@ -5,6 +5,8 @@ export const STATUS_RIPPING_START = 'rippingStart';
 export const STATUS_METADATA_RETREIVED = 'metaDataRetrieved';
 export const STATUS_RIPPING_SUCCESS = 'rippingSuccess';
 export const STATUS_RIPPING_ERROR = 'rippingError';
+export const STATUS_STORING_START = 'storingStart';
+export const STATUS_STORING_END = 'storingEnd';
 
 export class StatusMessage {
   static fromEvent(eventData) {
@@ -12,9 +14,25 @@ export class StatusMessage {
     return new StatusMessage(state, metaData);
   }
 
+  static idle() {
+    return new StatusMessage(STATUS_IDLE);
+  }
+
   constructor(state, metaData = {}) {
     this.state = state;
     this.metaData = metaData;
+  }
+
+  isIdle() {
+    return STATUS_IDLE === this.state;
+  }
+
+  isRunning() {
+    return STATUS_IDLE !== this.state;
+  }
+
+  isStoringStart() {
+    return STATUS_STORING_START === this.state;
   }
 
   setState(state) {
@@ -28,6 +46,10 @@ export class StatusMessage {
 
   addMetaData(field, value) {
     this.metaData[field] = value;
+  }
+
+  getMetaData(field) {
+    return this.metaData[field];
   }
 
   send(ws) {

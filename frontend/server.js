@@ -3,6 +3,8 @@ import serveStatic from 'serve-static';
 import WebSocket from 'ws';
 import http from 'http';
 
+import logger from '../lib/logger';
+
 function httpServer(distPath) {
   const serve = serveStatic(distPath);
 
@@ -33,6 +35,7 @@ export default function server({ port, distPath }) {
   webSocketServer(httpSrv);
 
   const srv = httpSrv.listen(port);
+  logger.info(`Frontend server started at port=${port}`);
 
   return {
     close: () => new Promise((resolve) => srv.close(() => resolve())),

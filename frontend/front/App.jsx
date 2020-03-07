@@ -1,35 +1,48 @@
 import React, { useState, useEffect } from 'react';
 
 import Toolbar from './Toolbar';
-import RippingStatus from './RippingStatus';
+import RippingStatus from './status/RippingStatus';
 
 import {
   ClientMessage,
   StatusMessage,
 } from '../messages';
 
-//https://bulma.io/
-//https://getbootstrap.com/docs/4.4/getting-started/introduction/
-
 const App = () => {
   const [isConnected, setConnected] = useState(false);
-  const [rippingStatus, setRippingStatus] = useState(null);
+  const [rippingStatus, setRippingStatus] = useState(StatusMessage.idle());
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:3000');
+    let connecting;
+    let socket;
 
-    socket.addEventListener('open', () => {
-      setConnected(true);
-      ClientMessage.clientReady().send(socket);
-    });
+    function connectWS() {
+      socket = new WebSocket('ws://localhost:3000');
 
-    socket.addEventListener('close', () => {
-      setConnected(false);
-    });
+      socket.addEventListener('open', () => {
+        connecting !== null && clearInterval(connecting);
+        connecting = null;
+        setConnected(true);
+        ClientMessage.clientReady().send(socket);
+      });
 
-    socket.addEventListener('message', (message) => {
-      setRippingStatus(StatusMessage.fromEvent(message.data));
-    });
+      socket.addEventListener('close', () => {
+        setConnected(false);
+
+        if (!connecting) {
+          connecting = setInterval(() => {
+            connectWS();
+          }, 1000);
+        }
+      });
+
+      socket.addEventListener('message', (message) => {
+        console.log(`Message: ${JSON.stringify(message)}`);
+        setRippingStatus(StatusMessage.fromEvent(message.data));
+      });
+    }
+
+    connectWS();
 
     return () => {
       if (isConnected) socket.close();
@@ -39,7 +52,9 @@ const App = () => {
   return (
     <>
       <Toolbar isConnected={isConnected} />
-      <RippingStatus rippingStatus={rippingStatus} />
+      <div className="container">
+        <RippingStatus rippingStatus={rippingStatus} isConnected={isConnected} />
+      </div>
     </>
   );
 };

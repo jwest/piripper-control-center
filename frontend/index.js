@@ -6,6 +6,8 @@ import {
   STATUS_RIPPING_START,
   STATUS_RIPPING_SUCCESS,
   STATUS_RIPPING_ERROR,
+  STATUS_STORING_START,
+  STATUS_STORING_END,
   STATUS_METADATA_RETREIVED,
   ClientMessage,
   StatusMessage,
@@ -61,6 +63,8 @@ module.exports = (eventBus, port = 3000) => {
       STATUS_RIPPING_START,
       STATUS_RIPPING_SUCCESS,
       STATUS_RIPPING_ERROR,
+      STATUS_STORING_START,
+      STATUS_STORING_END,
     ].forEach((eventName) => {
       proxyEvent(eventName, ws, eventBus, status);
     });

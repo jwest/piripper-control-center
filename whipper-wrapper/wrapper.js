@@ -13,17 +13,13 @@ function findInLog(line, pattern) {
 }
 
 function metaDataParse(line) {
-  const fields = fieldsFromLogs
+  return fieldsFromLogs
     .map((field) => ({ name: field.name, value: findInLog(line, field.pattern) }))
-    .filter((field) => field.value != null);
-
-  if (fields.length === 0) {
-    return null;
-  }
-
-  const field = fields[0];
-  logger.info(`Parse meta data from log ${field.name}: ${field.value}`);
-  return field;
+    .filter((field) => field.value != null)
+    .map((field) => {
+      logger.info(`Parse meta data from log ${field.name}: ${field.value}`);
+      return field;
+    });
 }
 
 export default function wrapper(command, args, eventBus) {
@@ -35,11 +31,7 @@ export default function wrapper(command, args, eventBus) {
   process.stdout.on('data', (data) => {
     data.split('\n').forEach((line) => {
       logger.trace('WHIPPER STDOUT:', line);
-      const field = metaDataParse(line);
-
-      if (field != null) {
-        eventBus.emit('metaDataRetrieved', { field: field.name, value: field.value });
-      }
+      metaDataParse(line).forEach((field) => eventBus.emit('metaDataRetrieved', { field: field.name, value: field.value }));
     });
   });
 
