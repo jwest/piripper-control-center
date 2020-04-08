@@ -17,7 +17,7 @@ const App = () => {
     let socket;
 
     function connectWS() {
-      socket = new WebSocket('ws://localhost:3000');
+      socket = new WebSocket(`ws://${window.location.host}`);
 
       socket.addEventListener('open', () => {
         connecting !== null && clearInterval(connecting);

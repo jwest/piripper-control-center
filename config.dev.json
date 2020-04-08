@@ -4,7 +4,7 @@
     "setcdCommand": "./cdrom-starter/tests/mocks/setcd-mock.sh"
   },
   "whipperWrapper": {
-    "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}} 2"
+    "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh {{WORKSPACE_PATH}} 2"
   },
   "fileNameNormalizator": {
     "enabled": true

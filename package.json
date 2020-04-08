@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "parcel build -d dist/public frontend/front/index.html && babel . -d dist --ignore '**/*.spec.js','bin','dist','node_modules'",
-    "start": "npm run build && LOG_LEVEL=trace ./bin/piripper.js",
+    "start": "npm run build && LOG_LEVEL=trace node ./bin/piripper.js",
     "start:front": "parcel frontend/front/index.html",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
