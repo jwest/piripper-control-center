@@ -14,20 +14,23 @@ export default function albumStore(config, eventBus) {
       const albumPath = join(tmpWorkspace.getNormalizedOutputPath(), albumName);
       logger.debug(`Album path for prepare copy = ${albumPath}`);
 
+      eventBus.emit('storingStart', { inputPath: albumPath });
+
       config.destinations.forEach((destination) => {
         const outputPath = join(destination.path, albumName);
-        eventBus.emit('storingStart', { inputPath: albumPath, outputPath });
+        eventBus.emit('storingStartForStore', { inputPath: albumPath, outputPath });
 
         fs.copySync(albumPath, outputPath);
 
         logger.info(`Album stored in: ${outputPath}`);
-        eventBus.emit('storingEnd', { inputPath: albumPath, outputPath });
+        eventBus.emit('storingEndForStore', { inputPath: albumPath, outputPath });
       });
 
       fs.removeSync(albumPath);
 
       logger.debug(`Temporary album path removed (${albumName})`);
       eventBus.emit('storingClear', { inputPath: albumPath });
+      eventBus.emit('storingEnd', { inputPath: albumPath });
 
       resolve();
     }),

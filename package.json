@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf ./dist && babel . -d dist --ignore '**/*.spec.js','bin','dist','node_modules'",
-    "start": "npm run build && LOG_LEVEL=trace ./bin/piripper.js",
+    "build": "parcel build -d dist/public frontend/front/index.html && babel . -d dist --ignore '**/*.spec.js','bin','dist','node_modules'",
+    "start": "npm run build && LOG_LEVEL=trace node ./bin/piripper.js",
+    "start:front": "parcel frontend/front/index.html",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "unit": "LOG_LEVEL=error jest --ci --collectCoverage",
@@ -15,22 +16,33 @@
   "author": "Jakub Westfalewski <j.westfalewski@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "finalhandler": "^1.1.2",
     "fs-extra": "^8.1.0",
     "normalize-strings": "^1.1.0",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "serve-static": "^1.14.1",
+    "ws": "^7.2.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-react-jsx": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
     "babel-jest": "^25.1.0",
+    "babel-loader": "^8.0.6",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jest": "^23.6.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "node-fetch": "^2.6.0",
+    "parcel-bundler": "^1.12.4"
   },
   "jest": {
     "transform": {
