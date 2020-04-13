@@ -117,7 +117,6 @@ describe('album store', () => {
     eventEmitter.on('storingStart', (data) => {
       // then
       expect(data.inputPath).toBe(join(outputPath, 'album name'));
-      expect(data.outputPath).toBe(join(destinationPath, 'album name'));
       done();
     });
 
@@ -142,7 +141,6 @@ describe('album store', () => {
     eventEmitter.on('storingEnd', (data) => {
       // then
       expect(data.inputPath).toBe(join(outputPath, 'album name'));
-      expect(data.outputPath).toBe(join(destinationPath, 'album name'));
       done();
     });
 
@@ -165,6 +163,30 @@ describe('album store', () => {
     const eventEmitter = new EventEmitter();
 
     eventEmitter.on('storingClear', (data) => {
+      // then
+      expect(data.inputPath).toBe(join(outputPath, 'album name'));
+      done();
+    });
+
+    // when
+    albumStore(config, eventEmitter).store(tmpWorkspace);
+  });
+
+  test('should send event on end storing', (done) => {
+    // given
+    const destinationPath = tmp();
+    const config = { destinations: [{ path: destinationPath }] };
+
+    const outputPath = tmp();
+    const tmpWorkspace = {
+      getNormalizedOutputPath: () => outputPath,
+    };
+
+    mockAlbum(outputPath, 'album name', ['1. file name.flac', '2. file name.flac']);
+
+    const eventEmitter = new EventEmitter();
+
+    eventEmitter.on('storingEnd', (data) => {
       // then
       expect(data.inputPath).toBe(join(outputPath, 'album name'));
       done();

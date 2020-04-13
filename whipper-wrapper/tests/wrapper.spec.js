@@ -45,12 +45,12 @@ describe('whipper ripping with success', () => {
 
   describe('parse meta data', () => {
     [
-      { event: 'metaDataDiscIdRetrieved', expect: { value: 'PTsh3.W7JzvObAM4e3myq3AGNEM' } },
-      { event: 'metaDataArtistRetrieved', expect: { value: 'Sound Horizon' } },
-      { event: 'metaDataTitleRetrieved', expect: { value: 'Elysion ～ 楽園幻想物語組曲 ～' } },
-      { event: 'metaDataDurationRetrieved', expect: { value: '01:00:25.943' } },
-    ].forEach((testCase) => {
-      test(`should emit ${testCase.event}`, (done) => {
+      { field: 'discId', value: 'PTsh3.W7JzvObAM4e3myq3AGNEM' },
+      { field: 'artist', value: 'Sound Horizon' },
+      { field: 'title', value: 'Elysion ～ 楽園幻想物語組曲 ～' },
+      { field: 'duration', value: '01:00:25.943' },
+    ].forEach(({ field, value }) => {
+      test(`should emit metaDataRetrieved for field ${field}`, (done) => {
         // given
         const eventEmitter = new EventEmitter();
 
@@ -58,9 +58,11 @@ describe('whipper ripping with success', () => {
         wrapper(configMock, workspaceMock, eventEmitter);
 
         // then
-        eventEmitter.on(testCase.event, (data) => {
-          expect(data).toEqual(testCase.expect);
-          done();
+        eventEmitter.on('metaDataRetrieved', (data) => {
+          if (data.field === field) {
+            expect(data).toEqual({ field, value });
+            done();
+          }
         });
       });
     });
@@ -68,7 +70,7 @@ describe('whipper ripping with success', () => {
 });
 
 describe('whipper ripping with error', () => {
-  const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh {{WORKSPACE_PATH}}:/output' };
+  const configMock = { whipperCommand: './whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh {{WORKSPACE_PATH}}:/output 0' };
 
   test('should emmit rippingEnd', (done) => {
     // given

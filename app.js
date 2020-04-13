@@ -8,7 +8,13 @@ import whipperWrapper from './whipper-wrapper';
 import fileNameNormalizator from './file-name-normalizator';
 import albumStore from './album-store';
 
+import frontend from './frontend';
+
 const eventBus = new EventBus();
+
+frontend(eventBus);
+
+eventBus.emit('idle');
 
 export default function app(argv) {
   return new Promise((resolve) => {
@@ -38,10 +44,12 @@ export default function app(argv) {
               return cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom();
             })
             .then(() => {
+              eventBus.emit('idle');
               resolve();
             })
             .catch((err) => {
               logger.error(`Error on ripping: ${err}`);
+              eventBus.emit('idle');
 
               cdromStarter(config(argv.config)('cdromStatus')).ejectCdrom()
                 .then(() => { resolve(); });

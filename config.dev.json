@@ -1,17 +1,19 @@
 {
-    "cdromStatus": {
-        "ejectCommand": "./cdrom-starter/tests/mocks/eject-mock.sh",
-        "setcdCommand": "./cdrom-starter/tests/mocks/setcd-mock.sh"
-    },
-    "whipperWrapper": {
-        "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-mock.sh {{WORKSPACE_PATH}}"
-    },
-    "fileNameNormalizator": {
-        "enabled": true
-    },
-    "albumStore": {
-        "destinations": [
-            { "path": "/Users/jakub.westfalewski/Desktop" }
-        ]
-    }
+  "cdromStatus": {
+    "ejectCommand": "./cdrom-starter/tests/mocks/eject-mock.sh",
+    "setcdCommand": "./cdrom-starter/tests/mocks/setcd-mock.sh"
+  },
+  "whipperWrapper": {
+    "whipperCommand": "./whipper-wrapper/tests/mocks/whipper-release-not-found-mock.sh {{WORKSPACE_PATH}} 2"
+  },
+  "fileNameNormalizator": {
+    "enabled": true
+  },
+  "albumStore": {
+    "destinations": [
+      {
+        "path": "/Users/jakub.westfalewski/Desktop"
+      }
+    ]
+  }
 }
